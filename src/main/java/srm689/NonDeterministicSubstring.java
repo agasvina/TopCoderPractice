@@ -9,39 +9,19 @@ public class NonDeterministicSubstring {
     
     public static int ways(String A, String B) {
         int counter = 0;
-        Set<String> sub = new HashSet<>();
+        Set<String> set = new HashSet<>();
         if(B.length() > A.length()) return 0;
         for(int i  = 0; i <= A.length() - B.length(); i++) {
-            sub.add(A.substring(i, i+B.length()));
+            set.add(A.substring(i, i+B.length()));
         }
         
-        for(String s: sub) {
-            StringBuilder sb = new StringBuilder(B);
-            int idx = 0;
-            boolean counted = true;
-            while(idx != -1) {
-                idx = sb.indexOf("0");
-                if(idx == -1) break;
-                if(s.charAt(idx) == '1') {
-                    counted = false;
-                    break;
-                }
-                sb.setCharAt(idx, '?');
-            }
-            if(counted) {
-                idx = 0;
-                
-                while(idx != -1) {
-                    idx = sb.indexOf("1");
-                    if(idx == -1) break;
-                    if(s.charAt(idx) == '0') {
-                        counted = false;
-                        break;
-                    }
-                    sb.setCharAt(idx, '?');
-                }
-            }
-            if(counted) counter++;
+        for(String s: set) {
+            //create the Regex Pattern:
+            StringBuilder sb = new StringBuilder();
+            sb.append('(');
+            sb.append(B.replace("?", "."));
+            sb.append(')');
+            if(s.matches(sb.toString())) counter++;
         }
         
         return counter;
